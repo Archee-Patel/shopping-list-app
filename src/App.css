@@ -1,0 +1,84 @@
+.App {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+/* Item Row Styling with isEven/isOdd */
+.item-row.even {
+  background-color: #f8f9fa;
+}
+
+.item-row.odd {
+  background-color: #ffffff;
+}
+
+.item-row {
+  border-bottom: 1px solid #dee2e6;
+  transition: background-color 0.2s ease;
+}
+
+.item-row:hover {
+  background-color: #e9ecef;
+}
+
+.item-row:last-child {
+  border-bottom: none;
+}
+
+/* Shopping List Card */
+.shopping-list-card {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  border: 1px solid #dee2e6;
+}
+
+.shopping-list-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none !important;
+  }
+}
+
+/* Header Styles */
+.navbar-brand {
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+/* Button Styles */
+.btn {
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+/* Card Styles */
+.card {
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Form Styles */
+.form-control {
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+.form-control:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+/* Animation for new items */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
