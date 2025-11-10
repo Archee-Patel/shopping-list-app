@@ -1,9 +1,17 @@
 import React, { useState } from 'react';
-import { Container, Card, Form, Button, Alert } from 'react-bootstrap';
+import { Container, Card, Form, Button } from 'react-bootstrap';
 
-const LoginPage = ({ onLogin, users }) => {
+const LoginPage = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  // Always define users locally
+  const users = [
+    { id: 'user1', username: 'owner', password: '123', name: 'John Doe', isOwner: true },
+    { id: 'user2', username: 'jane', password: '123', name: 'Jane Smith', isOwner: false },
+    { id: 'user3', username: 'bob', password: '123', name: 'Bob Johnson', isOwner: false },
+    { id: 'user4', username: 'alice', password: '123', name: 'Alice Brown', isOwner: false }
+  ];
 
   const handleSubmit = (e) => {
     e.preventDefault();

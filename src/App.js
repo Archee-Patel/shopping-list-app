@@ -7,7 +7,7 @@ import ArchivedPage from './components/ArchivedPage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
-// Available users database
+// Available users database for adding members
 const AVAILABLE_USERS = [
   { id: 'user1', username: 'owner', password: '123', name: 'John Doe', email: 'owner@email.com', isOwner: true },
   { id: 'user2', username: 'jane', password: '123', name: 'Jane Smith', email: 'jane@email.com', isOwner: false },
@@ -99,6 +99,7 @@ function App() {
     ));
   };
 
+  // ADD THIS MISSING FUNCTION:
   const handleAddMember = (listId, newMember) => {
     setShoppingLists(prev => prev.map(list => 
       list.id === listId 
@@ -111,7 +112,7 @@ function App() {
   };
 
   if (!currentUser) {
-    return <LoginPage onLogin={handleLogin} users={AVAILABLE_USERS} />;
+    return <LoginPage onLogin={handleLogin} />;
   }
 
   return (
