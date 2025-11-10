@@ -6,7 +6,7 @@ import ItemsContainer from './ItemsContainer';
 import AddItemForm from './AddItemForm';
 import { Container, Row, Col, Alert, Button } from 'react-bootstrap';
 
-const ShoppingListPage = ({ shoppingLists, currentUser, onArchiveList, onUpdateListItems }) => {
+const ShoppingListPage = ({ shoppingLists, currentUser, onArchiveList, onUpdateListItems, onRemoveMember, onAddMember, onLogout }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const list = shoppingLists.find(l => l.id === id);
@@ -16,7 +16,7 @@ const ShoppingListPage = ({ shoppingLists, currentUser, onArchiveList, onUpdateL
   if (!list) {
     return (
       <div>
-        <Header currentUser={currentUser} />
+        <Header currentUser={currentUser} onLogout={onLogout} />
         <Container className="mt-4">
           <Alert variant="danger">
             <h4>List not found</h4>
@@ -66,9 +66,17 @@ const ShoppingListPage = ({ shoppingLists, currentUser, onArchiveList, onUpdateL
     }
   };
 
+  const handleRemoveMemberWrapper = (memberId) => {
+    onRemoveMember(list.id, memberId);
+  };
+
+  const handleAddMemberWrapper = (newMember) => {
+    onAddMember(list.id, newMember);
+  };
+
   return (
     <div className="shopping-list-page">
-      <Header currentUser={currentUser} />
+      <Header currentUser={currentUser} onLogout={onLogout} />
       <Container fluid>
         <Row>
           <Col md={3} className="desktop-only">
@@ -84,7 +92,10 @@ const ShoppingListPage = ({ shoppingLists, currentUser, onArchiveList, onUpdateL
                 listName={list.name}
                 isOwner={isOwner}
                 members={list.members}
+                currentUser={currentUser}
                 onArchive={handleArchive}
+                onRemoveMember={handleRemoveMemberWrapper}
+                onAddMember={handleAddMemberWrapper}
               />
               
               <ItemsContainer

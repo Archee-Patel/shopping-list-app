@@ -4,10 +4,10 @@ import Sidebar from './Sidebar';
 import ArchivedListsContainer from './ArchivedListsContainer';
 import { Container, Row, Col } from 'react-bootstrap';
 
-const ArchivedPage = ({ archivedLists, currentUser, onRestoreList }) => {
+const ArchivedPage = ({ archivedLists, currentUser, onRestoreList, onLogout }) => {
   return (
     <div className="archived-page">
-      <Header currentUser={currentUser} />
+      <Header currentUser={currentUser} onLogout={onLogout} />
       <Container fluid>
         <Row>
           <Col md={3} className="desktop-only">

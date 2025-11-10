@@ -4,7 +4,7 @@ import Sidebar from './Sidebar';
 import ShoppingListsContainer from './ShoppingListsContainer';
 import { Container, Row, Col, Card, Button, Form } from 'react-bootstrap';
 
-const DashboardPage = ({ shoppingLists, currentUser, onCreateList, onDeleteList }) => {
+const DashboardPage = ({ shoppingLists, currentUser, onCreateList, onDeleteList, onLogout }) => {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [newListName, setNewListName] = useState('');
 
@@ -19,7 +19,7 @@ const DashboardPage = ({ shoppingLists, currentUser, onCreateList, onDeleteList 
 
   return (
     <div className="dashboard-page">
-      <Header currentUser={currentUser} />
+      <Header currentUser={currentUser} onLogout={onLogout} />
       <Container fluid>
         <Row>
           <Col md={3} className="desktop-only">

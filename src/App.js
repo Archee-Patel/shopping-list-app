@@ -1,10 +1,19 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import LoginPage from './components/LoginPage';
 import DashboardPage from './components/DashboardPage';
 import ShoppingListPage from './components/ShoppingListPage';
 import ArchivedPage from './components/ArchivedPage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+
+// Available users database
+const AVAILABLE_USERS = [
+  { id: 'user1', username: 'owner', password: '123', name: 'John Doe', email: 'owner@email.com', isOwner: true },
+  { id: 'user2', username: 'jane', password: '123', name: 'Jane Smith', email: 'jane@email.com', isOwner: false },
+  { id: 'user3', username: 'bob', password: '123', name: 'Bob Johnson', email: 'bob@email.com', isOwner: false },
+  { id: 'user4', username: 'alice', password: '123', name: 'Alice Brown', email: 'alice@email.com', isOwner: false }
+];
 
 const MOCK_SHOPPING_LISTS = [
   {
@@ -12,78 +21,33 @@ const MOCK_SHOPPING_LISTS = [
     name: 'Grocery List',
     ownerId: 'user1',
     members: [
-      { id: 'user1', name: 'John Doe', email: 'john@email.com', isOwner: true },
-      { id: 'user2', name: 'Jane Smith', email: 'jane@email.com', isOwner: false },
-      { id: 'user3', name: 'Bob Johnson', email: 'bob@email.com', isOwner: false }
+      { id: 'user1', name: 'John Doe', email: 'owner@email.com', isOwner: true },
+      { id: 'user2', name: 'Jane Smith', email: 'jane@email.com', isOwner: false }
     ],
     items: [
       { id: '1', name: 'Milk', quantity: '2 liters', resolved: false, createdBy: 'user1' },
       { id: '2', name: 'Eggs', quantity: '12 pcs', resolved: true, createdBy: 'user2' },
       { id: '3', name: 'Bread', quantity: '1 loaf', resolved: false, createdBy: 'user1' },
-      { id: '4', name: 'Apples', quantity: '1 kg', resolved: false, createdBy: 'user3' }
+      { id: '4', name: 'Apples', quantity: '6 pieces', resolved: false, createdBy: 'user3' }
     ],
     isArchived: false,
     createdAt: new Date('2024-01-15'),
     updatedAt: new Date('2024-01-20')
-  },
-  {
-    id: '2',
-    name: 'Electronics',
-    ownerId: 'user1',
-    members: [
-      { id: 'user1', name: 'John Doe', email: 'john@email.com', isOwner: true },
-      { id: 'user4', name: 'Alice Brown', email: 'alice@email.com', isOwner: false }
-    ],
-    items: [
-      { id: '1', name: 'Laptop', quantity: '1 piece', resolved: false, createdBy: 'user1' },
-      { id: '2', name: 'Mouse', quantity: '2 pieces', resolved: true, createdBy: 'user4' },
-      { id: '3', name: 'Keyboard', quantity: '1 piece', resolved: false, createdBy: 'user1' }
-    ],
-    isArchived: false,
-    createdAt: new Date('2024-01-10'),
-    updatedAt: new Date('2024-01-18')
-  },
-  {
-    id: '3',
-    name: 'Clothes',
-    ownerId: 'user1',
-    members: [
-      { id: 'user1', name: 'John Doe', email: 'john@email.com', isOwner: true }
-    ],
-    items: [
-      { id: '1', name: 'T-Shirts', quantity: '3 pieces', resolved: false, createdBy: 'user1' },
-      { id: '2', name: 'Jeans', quantity: '1 pair', resolved: false, createdBy: 'user1' }
-    ],
-    isArchived: false,
-    createdAt: new Date('2024-01-08'),
-    updatedAt: new Date('2024-01-08')
-  }
-];
-
-const MOCK_ARCHIVED_LISTS = [
-  {
-    id: '4',
-    name: 'Party Supplies',
-    ownerId: 'user1',
-    members: [
-      { id: 'user1', name: 'John Doe', email: 'john@email.com', isOwner: true },
-      { id: 'user2', name: 'Jane Smith', email: 'jane@email.com', isOwner: false }
-    ],
-    items: [
-      { id: '1', name: 'Balloons', quantity: '20 pcs', resolved: true, createdBy: 'user1' },
-      { id: '2', name: 'Cake', quantity: '1 piece', resolved: true, createdBy: 'user2' }
-    ],
-    isArchived: true,
-    createdAt: new Date('2024-01-05'),
-    updatedAt: new Date('2024-01-12'),
-    archivedDate: '2024-01-12'
   }
 ];
 
 function App() {
+  const [currentUser, setCurrentUser] = useState(null);
   const [shoppingLists, setShoppingLists] = useState(MOCK_SHOPPING_LISTS);
-  const [archivedLists, setArchivedLists] = useState(MOCK_ARCHIVED_LISTS);
-  const [currentUser] = useState({ id: 'user1', name: 'John Doe' });
+  const [archivedLists, setArchivedLists] = useState([]);
+
+  const handleLogin = (user) => {
+    setCurrentUser(user);
+  };
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+  };
 
   const handleCreateList = (listName) => {
     const newList = {
@@ -127,6 +91,29 @@ function App() {
     ));
   };
 
+  const handleRemoveMember = (listId, memberId) => {
+    setShoppingLists(prev => prev.map(list => 
+      list.id === listId 
+        ? { ...list, members: list.members.filter(m => m.id !== memberId) }
+        : list
+    ));
+  };
+
+  const handleAddMember = (listId, newMember) => {
+    setShoppingLists(prev => prev.map(list => 
+      list.id === listId 
+        ? { 
+            ...list, 
+            members: [...list.members, { ...newMember, isOwner: false }]
+          }
+        : list
+    ));
+  };
+
+  if (!currentUser) {
+    return <LoginPage onLogin={handleLogin} users={AVAILABLE_USERS} />;
+  }
+
   return (
     <Router>
       <div className="App">
@@ -137,6 +124,7 @@ function App() {
               currentUser={currentUser}
               onCreateList={handleCreateList}
               onDeleteList={handleDeleteList}
+              onLogout={handleLogout}
             />
           } />
           <Route path="/list/:id" element={
@@ -145,6 +133,9 @@ function App() {
               currentUser={currentUser}
               onArchiveList={handleArchiveList}
               onUpdateListItems={handleUpdateListItems}
+              onRemoveMember={handleRemoveMember}
+              onAddMember={handleAddMember}
+              onLogout={handleLogout}
             />
           } />
           <Route path="/archived" element={
@@ -152,6 +143,7 @@ function App() {
               archivedLists={archivedLists}
               currentUser={currentUser}
               onRestoreList={handleRestoreList}
+              onLogout={handleLogout}
             />
           } />
         </Routes>
